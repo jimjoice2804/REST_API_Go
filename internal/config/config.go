@@ -1,4 +1,4 @@
-package Config
+package config
 
 import (
 	"log"
@@ -8,13 +8,13 @@ import (
 )
 
 type HTTPServer struct {
-	Address string `yaml:"address"`
+	Address string `yaml:"address" env:"ADDRESS" env-default:"localhost:8080"`
 }
 
 type Config struct {
-	Env         string `yaml:"env" env-required:"true"`
-	StoragePath string `yaml:"storage_path" env-required:"true"`
-	HTTPServer  `yaml:"http_server"`
+	Env         string `yaml:"env" env:"ENV" env-required:"true"`
+	StoragePath string `yaml:"storage_path" env:"STORAGE_PATH" env-required:"true" `
+	HTTPServer  `yaml:"http_server" env-prefix:"HTTP_SERVER_"`
 }
 
 func MustLoad() *Config {
@@ -23,7 +23,7 @@ func MustLoad() *Config {
 	configPath := os.Getenv("CONFIG_PATH")
 
 	if configPath == "" {
-		configPath = "local.yaml"
+		configPath = "config/local.yaml"
 	}
 
 	//this will read the local.yaml and add to cfg struct
